@@ -49,8 +49,8 @@ impl LinkedHashX {
         self.insert(new_data);
     }
 
-    pub fn root(self) -> Vec<u8> {
-        self.root
+    pub fn get_root(&self) -> &Vec<u8> {
+        &self.root
     }
 }
 
