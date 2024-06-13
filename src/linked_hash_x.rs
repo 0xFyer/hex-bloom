@@ -48,6 +48,10 @@ impl LinkedHashX {
         self.delete(old_data);
         self.insert(new_data);
     }
+
+    pub fn root(self) -> Vec<u8> {
+        self.root
+    }
 }
 
 fn xor(a: &[u8], b: &[u8]) -> Vec<u8> {
