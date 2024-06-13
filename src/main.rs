@@ -1,4 +1,4 @@
-mod linked_hash_x;
+pub mod linked_hash_x;
 
 use std::time::Instant;
 
