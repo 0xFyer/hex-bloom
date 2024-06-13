@@ -1,5 +1,4 @@
-pub mod linked_hash_x;
-
+use hex_bloom::linked_hash_x;
 use std::time::Instant;
 
 fn main() {
