@@ -1,4 +1,4 @@
-use hex_bloom::linked_hash_x;
+use hex_bloom::linked_hash_x::{self};
 use std::time::Instant;
 
 fn main() {

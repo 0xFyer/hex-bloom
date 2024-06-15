@@ -2,21 +2,21 @@ use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 
 #[derive(Debug)]
-pub struct LinkedHashX<T> {
+pub struct LinkedHashX {
     root: Vec<u8>,
     root0: Vec<u8>,
-    hashes: HashMap<T, Vec<u8>>,
+    hashes: HashMap<Vec<u8>, Vec<u8>>,
 }
 
-impl<T: AsRef<[u8]> + std::fmt::Debug + std::cmp::Eq + std::hash::Hash + Clone> LinkedHashX<T> {
-    pub fn new(data: Vec<T>) -> LinkedHashX<T> {
+impl LinkedHashX {
+    pub fn new(data: Vec<Vec<u8>>) -> LinkedHashX {
         let mut root = vec![0; 32];
         let mut root0 = vec![0; 32];
         let mut hashes = HashMap::new();
+        let mut hasher = Sha256::new();
         for item in data {
-            let mut hasher = Sha256::new();
-            hasher.update(item.as_ref());
-            let hash = hasher.finalize();
+            hasher.update(&item);
+            let hash = hasher.finalize_reset();
             root = xor(&root, &hash);
             root0 = xor(&root0, &hash);
             hashes.insert(item, hash.to_vec());
@@ -28,23 +28,23 @@ impl<T: AsRef<[u8]> + std::fmt::Debug + std::cmp::Eq + std::hash::Hash + Clone> 
         }
     }
 
-    pub fn insert(&mut self, data: T) {
+    pub fn insert(&mut self, data: Vec<u8>) {
         let mut hasher = Sha256::new();
-        hasher.update(data.as_ref());
+        hasher.update(&data);
         let hash = hasher.finalize();
         self.root = xor(&self.root, &hash);
         self.root0 = xor(&self.root0, &hash);
         self.hashes.insert(data, hash.to_vec());
     }
 
-    pub fn delete(&mut self, data: T) {
+    pub fn delete(&mut self, data: Vec<u8>) {
         if let Some(hash) = self.hashes.remove(&data) {
             self.root = xor(&self.root, &hash);
             self.root0 = xor(&self.root0, &hash);
         }
     }
 
-    pub fn update(&mut self, old_data: T, new_data: T) {
+    pub fn update(&mut self, old_data: Vec<u8>, new_data: Vec<u8>) {
         self.delete(old_data);
         self.insert(new_data);
     }
