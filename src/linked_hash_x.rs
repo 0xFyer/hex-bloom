@@ -1,7 +1,8 @@
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct LinkedHashX {
     root: Vec<u8>,
     root0: Vec<u8>,
@@ -51,6 +52,14 @@ impl LinkedHashX {
 
     pub fn get_root(&self) -> &Vec<u8> {
         &self.root
+    }
+
+    pub fn get_keys(&self) -> Vec<Vec<u8>> {
+        let mut keys: Vec<Vec<u8>> = vec![];
+        for (key, _) in self.hashes.clone().into_iter() {
+            keys.push(key);
+        }
+        keys
     }
 }
 
